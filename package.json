@@ -1,0 +1,24 @@
+{
+  "name": "elasticsearch_tf",
+  "version": "1.0.0",
+  "description": "Terraform files for deploying an ES cluster in AWS",
+  "main": "index.js",
+  "dependencies": {
+    "aws-elasticsearch-client": "^1.2.1",
+    "elasticsearch": "^15.2.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/RyanFrench/elasticsearch_tf.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/RyanFrench/elasticsearch_tf/issues"
+  },
+  "homepage": "https://github.com/RyanFrench/elasticsearch_tf#readme"
+}

@@ -1,0 +1,37 @@
+'use strict';
+
+var es = require('elasticsearch');
+var fs = require('fs');
+var dataset = JSON.parse(fs.readFileSync('data.json', 'utf8'));
+
+console.log('Loading function');
+
+exports.handler = (event, context, callback) => {
+    console.log(`Connecting to ElasticSearch`);
+
+
+    var endpoint = process.env.ES_ENDPOINT + ':9200';
+    console.log(endpoint);
+
+
+    var client = new es.Client({
+      host: endpoint,
+      log: 'trace',
+    });
+
+
+    client.cluster.health({}, function(err, resp, status) {
+      console.log('-- Client Health --', resp);
+    });
+
+    const response = client.index({
+      index: 'population',
+      body: dataset,
+    });
+
+
+    var message = { response: response };
+    callback(null, JSON.stringify(message));
+  };
+
+exports.handler();
