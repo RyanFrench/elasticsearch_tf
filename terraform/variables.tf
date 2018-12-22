@@ -23,6 +23,6 @@ variable "node_volume_size" {
 }
 
 variable "access_cidr_block" {
-  description = "The CIDR block that will be used to talk to the ES Domain"
+  description = "The CIDR block that should have access to talk to the ES Domain"
   type        = "string"
 }

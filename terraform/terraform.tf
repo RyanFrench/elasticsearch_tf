@@ -4,10 +4,6 @@ provider "aws" {
   version = "~> 1.52"
 }
 
-provider "archive" {
-  version = "~> 1.1"
-}
-
 resource "aws_iam_service_linked_role" "es" {
   aws_service_name = "es.amazonaws.com"
 }
@@ -52,54 +48,5 @@ POLICY
 
   tags = {
     Domain = "elasticsearch"
-  }
-}
-
-data "archive_file" "lambda" {
-  type        = "zip"
-  source_dir = "./lambda/"
-  output_path = "./lambda.zip"
-
-}
-
-resource "aws_iam_role" "iam_for_lambda" {
-  name = "iam_for_lambda"
-
-
-  assume_role_policy = <<EOF
-  {
-    "Version": "2012-10-17",
-    "Statement": [
-      {
-        "Action": "sts:AssumeRole",
-        "Principal": {
-          "Service": "lambda.amazonaws.com"
-        },
-        "Effect": "Allow",
-        "Sid": ""
-      }
-    ]
-  }
-EOF
-}
-
-resource "aws_iam_role_policy_attachment" "lambda_policy_attachment" {
-  role       = "${aws_iam_role.iam_for_lambda.name}"
-  policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
-}
-
-resource "aws_lambda_function" "elasticsearch" {
-  filename         = "${data.archive_file.lambda.output_path}"
-  function_name    = "elasticsearch"
-  role             = "${aws_iam_role.iam_for_lambda.arn}"
-  handler          = "index.handler"
-  source_code_hash = "${data.archive_file.lambda.output_base64sha256}"
-  runtime          = "nodejs8.10"
-  timeout          = "120"
-
-  environment {
-    variables = {
-      ES_ENDPOINT = "${aws_elasticsearch_domain.elasticsearch.endpoint}"
-    }
   }
 }
